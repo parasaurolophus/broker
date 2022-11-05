@@ -1,0 +1,12 @@
+{
+    "name": "Broker",
+    "description": "WebSocket based publish / subscribe broker inpired by MQTT using Node-RED",
+    "version": "0.0.1",
+    "dependencies": {},
+    "node-red": {
+        "settings": {
+            "flowFile": "flow.json",
+            "credentialsFile": "flow_cred.json"
+        }
+    }
+}
