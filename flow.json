@@ -1,1 +1,525 @@
-[]
+[
+    {
+        "id": "4091fd44287d6395",
+        "type": "tab",
+        "label": "Broker",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "275e65c2e325c428",
+        "type": "group",
+        "z": "4091fd44287d6395",
+        "name": "broker (server)",
+        "style": {
+            "stroke": "none",
+            "fill": "#000000",
+            "fill-opacity": "0.1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "89ef473d0b3240a3",
+            "6e706fe233bbaf61",
+            "c35bb41cfa2a194e",
+            "3abb2b004a6b85e2",
+            "83415e3753245eea",
+            "2082bf2784e6bf03",
+            "78c22c15013385da"
+        ],
+        "x": 314,
+        "y": 19,
+        "w": 712,
+        "h": 202,
+        "info": "Publish / subscribe messaging broker inspired by MQTT.\n\nAny message sent to the `websocket in` listener node will be broadcast\nto all clients currently connected to the `websocket out` listener node.\nAs a side-effect, if a received message has `msg.retain` set to `true`,\nthe `retain` function node handle message retention in a fashion\ninspired by MQTT:\n\n- If `msg.payload` is the empty string, delete the value associated\n  with `msg.topic` from flow context.\n- Otherwise, store the entire received message in flow context using\n  `msg.topic` as the key.\n\nIn all cases, `msg.retain` will be set to `false` before the `retain`\nfunction nodes sends it to the `websocket out` listener node.\n\nIn addition, each time a client connects to the `websocket out` listener\nnode, the `retained` function node re-sends all currently retained\nmessages with `msg.retain` set to `true`. This behavior is inspired by\nMQTT except that the entire message is retained, not just `msg.topic`\nand `msg.payload` and it is up to clients to filter messages based on\ntheir topics or other properties. It requires that a filesystem-backed\ncontext store exist, named `\"file\"`."
+    },
+    {
+        "id": "8dd17d505f7090cd",
+        "type": "group",
+        "z": "4091fd44287d6395",
+        "name": "broker (client)",
+        "style": {
+            "stroke": "none",
+            "fill": "#000000",
+            "fill-opacity": "0.1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "99aac860f1c5dc73",
+            "a0bb7e699b0666f0",
+            "edfa1be128db947b",
+            "69dd2c645203e076",
+            "e2ecab5e01cbc5a2",
+            "5f534de2379110c8"
+        ],
+        "x": 314,
+        "y": 239,
+        "w": 702,
+        "h": 162,
+        "info": "Publish / subscribe broker inspired by MQTT.\n\nThis group of nodes represents the client side of such a service. Each\nmessage sent to the `link out` node named `publish` will be broadcast\nto all connected clients. Such messages are received from the `link in`\nnode named `subscribe`. The `websocket out` and `websocket in` nodes\nforward all messaging to and from a machine on the network running the\nserver side logic.\n\nIn addition, `msg.topic` and `msg.retain` are handled in a fashion\nsimilar to MQTT. If a published message has `msg.retain` set to `true`:\n\n- if `msg.payload` is the empty string, the server will delete any\n  previously retained message for the given value of `msg.topic`\n- otherwise, the server will store the given message using `msg.topic`\n  as the key\n\nIn all cases, `msg.retain` will be set to `false` for all newly\npublished messages before being broadcast to all clients. Each time a\nclient connects, the server re-sends all currently retained messages\nwith `msg.retain` set to `true`. Unlike MQTT, the entire message is\nretained and re-sent, not just `msg.topic` and `msg.payload`, and\nit is up to the client to filter messages based on `msg.topic` or any\nother properties."
+    },
+    {
+        "id": "f6f895108191357b",
+        "type": "websocket-listener",
+        "z": "4091fd44287d6395",
+        "path": "/broker",
+        "wholemsg": "true"
+    },
+    {
+        "id": "d90e8066d87eeefb",
+        "type": "websocket-client",
+        "z": "4091fd44287d6395",
+        "path": "ws://pi400.local:1880/broker",
+        "tls": "",
+        "wholemsg": "true",
+        "hb": "5",
+        "subprotocol": ""
+    },
+    {
+        "id": "dc1617bcc40ca5ed",
+        "type": "inject",
+        "z": "4091fd44287d6395",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "retain",
+                "v": "true",
+                "vt": "bool"
+            },
+            {
+                "p": "baz",
+                "v": "waka",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "fubar",
+        "payload": "",
+        "payloadType": "date",
+        "x": 120,
+        "y": 300,
+        "wires": [
+            [
+                "91795eb762445433"
+            ]
+        ]
+    },
+    {
+        "id": "e85924548f315ddf",
+        "type": "inject",
+        "z": "4091fd44287d6395",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "retain",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "fubar",
+        "payload": "",
+        "payloadType": "str",
+        "x": 150,
+        "y": 340,
+        "wires": [
+            [
+                "91795eb762445433"
+            ]
+        ]
+    },
+    {
+        "id": "cf7272c7b6f08b35",
+        "type": "debug",
+        "z": "4091fd44287d6395",
+        "name": "fubar",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "counter",
+        "x": 1290,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "89ef473d0b3240a3",
+        "type": "websocket in",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "",
+        "server": "f6f895108191357b",
+        "client": "",
+        "x": 410,
+        "y": 180,
+        "wires": [
+            [
+                "6e706fe233bbaf61"
+            ]
+        ],
+        "info": "Listen for messages sent to this websocket server."
+    },
+    {
+        "id": "6e706fe233bbaf61",
+        "type": "change",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "_session",
+                "pt": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 180,
+        "wires": [
+            [
+                "2082bf2784e6bf03"
+            ]
+        ],
+        "info": "Delete `msg._session` so that this message will be broadcast to all\nclients."
+    },
+    {
+        "id": "c35bb41cfa2a194e",
+        "type": "websocket out",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "",
+        "server": "f6f895108191357b",
+        "client": "",
+        "x": 930,
+        "y": 140,
+        "wires": [],
+        "info": "Send messages to connected clients."
+    },
+    {
+        "id": "99aac860f1c5dc73",
+        "type": "websocket in",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "",
+        "server": "",
+        "client": "d90e8066d87eeefb",
+        "x": 810,
+        "y": 360,
+        "wires": [
+            [
+                "a0bb7e699b0666f0"
+            ]
+        ],
+        "outputLabels": [
+            "subscribe"
+        ]
+    },
+    {
+        "id": "a0bb7e699b0666f0",
+        "type": "link out",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "subscribe",
+        "mode": "link",
+        "links": [
+            "cad334119a674b99"
+        ],
+        "x": 975,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "edfa1be128db947b",
+        "type": "link in",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "publish",
+        "links": [
+            "91795eb762445433"
+        ],
+        "x": 355,
+        "y": 360,
+        "wires": [
+            [
+                "69dd2c645203e076"
+            ]
+        ]
+    },
+    {
+        "id": "69dd2c645203e076",
+        "type": "websocket out",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "",
+        "server": "",
+        "client": "d90e8066d87eeefb",
+        "x": 530,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "3abb2b004a6b85e2",
+        "type": "status",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "broker out",
+        "scope": [
+            "c35bb41cfa2a194e"
+        ],
+        "x": 620,
+        "y": 100,
+        "wires": [
+            [
+                "83415e3753245eea"
+            ]
+        ],
+        "info": "Trigger `retained` function for each client when it connects."
+    },
+    {
+        "id": "cad334119a674b99",
+        "type": "link in",
+        "z": "4091fd44287d6395",
+        "name": "subscribe",
+        "links": [
+            "a0bb7e699b0666f0"
+        ],
+        "x": 1055,
+        "y": 360,
+        "wires": [
+            [
+                "bd6f344b19cab547"
+            ]
+        ]
+    },
+    {
+        "id": "91795eb762445433",
+        "type": "link out",
+        "z": "4091fd44287d6395",
+        "name": "publish",
+        "mode": "link",
+        "links": [
+            "edfa1be128db947b"
+        ],
+        "x": 275,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "bd6f344b19cab547",
+        "type": "switch",
+        "z": "4091fd44287d6395",
+        "name": "topic",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "fubar",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "baz",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1150,
+        "y": 360,
+        "wires": [
+            [
+                "cf7272c7b6f08b35"
+            ],
+            [
+                "d378329f5de4856c"
+            ]
+        ]
+    },
+    {
+        "id": "d378329f5de4856c",
+        "type": "debug",
+        "z": "4091fd44287d6395",
+        "name": "baz",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "counter",
+        "x": 1290,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "83415e3753245eea",
+        "type": "function",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "retained",
+        "func": "const retained = flow.get('retained', 'file') || {}\nconst messages = []\n\nfor (let topic in retained) {\n\n    const message = retained[topic]\n\n    message._session = msg._session\n    messages.push(message)\n\n}\n\nnode.status({\n    text: Object.keys(retained).length,\n    shape: 'dot',\n    fill: 'blue'\n})\n\nreturn [messages]",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "c35bb41cfa2a194e"
+            ]
+        ],
+        "info": "Re-send all currently retained messages with `msg.retain` set to `true`.\n\nThis behavior is inspired by MQTT except that the entire message is\nretained, not just `msg.topic` and `msg.payload` and it is up to clients\nto filter messages based on their topics or other properties. It\nrequires that a filesystem-backed context store exist, named `\"file\"`."
+    },
+    {
+        "id": "2082bf2784e6bf03",
+        "type": "function",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "retain",
+        "func": "if (msg.retain === true) {\n\n    if (!msg.topic) {\n\n        node.error('msg.topic is missing', msg)\n        return null\n\n    }\n\n    const retained = flow.get('retained', 'file') || {}\n\n    if (msg.payload === '') {\n\n        delete retained[msg.topic]\n\n    } else {\n\n        retained[msg.topic] = RED.util.cloneMessage(msg)\n\n    }\n\n    flow.set('retained', retained, 'file')\n\n    node.status({\n        text: Object.keys(retained).length,\n        shape: 'dot',\n        fill: 'blue'\n    })\n}\n\nmsg.retain = false\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [
+                "c35bb41cfa2a194e"
+            ]
+        ],
+        "info": "Pass all messages through this `function` node unchanged, except:\n\n1. if `msg.retain` is `true` in the input:\n    - if `msg.payload` is the empty string, delete the value associated\n      with `msg.topic` from flow context\n    - otherwise, store the entire received message in flow context using\n      `msg.topic` as the key.\n2. `msg.retain` is set to `false` in the output\n\nThis behavior is inspired by MQTT except that the entire message is\nretained, not just `msg.topic` and `msg.payload` and it is up to clients\nto filter messages based on their topics or other properties. It\nrequires that a filesystem-backed context store exist, named `\"file\"`."
+    },
+    {
+        "id": "cd2ffec94ad43988",
+        "type": "inject",
+        "z": "4091fd44287d6395",
+        "name": "empty topic",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            },
+            {
+                "p": "retain",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 380,
+        "wires": [
+            [
+                "91795eb762445433"
+            ]
+        ]
+    },
+    {
+        "id": "e0963db3cfe08725",
+        "type": "inject",
+        "z": "4091fd44287d6395",
+        "name": "no topic",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "retain",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 420,
+        "wires": [
+            [
+                "91795eb762445433"
+            ]
+        ]
+    },
+    {
+        "id": "78c22c15013385da",
+        "type": "comment",
+        "z": "4091fd44287d6395",
+        "g": "275e65c2e325c428",
+        "name": "assumes a filesystem-backed context store exists named \"file\"",
+        "info": "",
+        "x": 560,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e2ecab5e01cbc5a2",
+        "type": "comment",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "copy this group of nodes to any Node-RED instance on the same LAN",
+        "info": "",
+        "x": 590,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "5f534de2379110c8",
+        "type": "comment",
+        "z": "4091fd44287d6395",
+        "g": "8dd17d505f7090cd",
+        "name": "change the URL on the client to match your actual server configuration",
+        "info": "",
+        "x": 590,
+        "y": 320,
+        "wires": []
+    }
+]
