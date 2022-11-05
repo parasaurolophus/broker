@@ -14,10 +14,10 @@
         "name": "broker (server)",
         "style": {
             "stroke": "none",
-            "fill": "#000000",
+            "fill": "#ffffff",
             "fill-opacity": "0.1",
             "label": true,
-            "color": "#000000"
+            "color": "#ffffff"
         },
         "nodes": [
             "89ef473d0b3240a3",
@@ -41,10 +41,10 @@
         "name": "broker (client)",
         "style": {
             "stroke": "none",
-            "fill": "#000000",
+            "fill": "#ffffff",
             "fill-opacity": "0.1",
             "label": true,
-            "color": "#000000"
+            "color": "#ffffff"
         },
         "nodes": [
             "99aac860f1c5dc73",
