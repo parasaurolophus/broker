@@ -1,7 +1,7 @@
 {
     "name": "Broker",
     "description": "WebSocket based publish / subscribe broker inpired by MQTT using Node-RED",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "dependencies": {},
     "node-red": {
         "settings": {

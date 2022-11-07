@@ -71,7 +71,7 @@
         "id": "d90e8066d87eeefb",
         "type": "websocket-client",
         "z": "4091fd44287d6395",
-        "path": "ws://pi400.local:1880/broker",
+        "path": "ws://localhost:1880/broker",
         "tls": "",
         "wholemsg": "true",
         "hb": "5",
